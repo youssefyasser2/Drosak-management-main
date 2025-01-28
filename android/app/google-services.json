@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315818859363",
+    "project_id": "myfirebaseprojext007-c11c4",
+    "storage_bucket": "myfirebaseprojext007-c11c4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315818859363:android:1641b1ffa2a570d9259156",
+        "android_client_info": {
+          "package_name": "com.youssef.drosak"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJpiu1lS3YWgHYbWvz5qNm54pAPH8hgp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

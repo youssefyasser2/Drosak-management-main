@@ -1,4 +1,5 @@
 import 'package:drosak/src/core/resources/routes_mananger.dart';
+import 'package:drosak/src/view/main_screen/screen/main_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: RoutesManager.routes,
         initialRoute: routesName,
-        // home: HomePage(),
+        home: const MainScreen(),
         debugShowCheckedModeBanner: false,
         title: 'Flutter App',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+            primarySwatch: Colors.blue,
+            useMaterial3: true,
+            fontFamily: 'AA-GALAXY'),
       ),
     );
   }

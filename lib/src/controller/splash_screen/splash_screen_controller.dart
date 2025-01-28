@@ -1,11 +1,11 @@
+// splash_screen_controller.dart
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class SplashController {
   late AnimationController animationController;
   late Animation<Offset> topImageAnimation;
-  late Animation<Offset> bottomImageAnimation;
+  late Animation<Offset> bottomImageAnimation; 
   late Timer timer;
 
   void initializeAnimation(TickerProvider vsync) {

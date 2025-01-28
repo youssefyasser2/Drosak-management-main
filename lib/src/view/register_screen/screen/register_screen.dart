@@ -1,11 +1,64 @@
 import 'package:drosak/src/core/resources/routes_mananger.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController fullNameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final TextEditingController confirmPasswordController =
+        TextEditingController();
+
+    Future<void> registerUser() async {
+      if (passwordController.text != confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Passwords do not match'),
+          ),
+        );
+        return;
+      }
+
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        // عرض رسالة نجاح ونقل المستخدم إلى صفحة تسجيل الدخول
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration successful! Please log in.'),
+          ),
+        );
+        Navigator.pushReplacementNamed(context, RoutesName.kLoginScreenRoute);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The password provided is too weak.'),
+            ),
+          );
+        } else if (e.code == 'email-already-in-use') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('The account already exists for that email.'),
+            ),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An error occurred. Please try again.'),
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xff18171C), // Black background
       body: SingleChildScrollView(
@@ -16,21 +69,19 @@ class RegisterScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 50),
-              // Logo (optional)
               Center(
                 child: CircleAvatar(
                   radius: 40,
                   backgroundColor: const Color(0xff8012DC), // Purple circle
                   child: Image.asset(
                     'assets/images/logo.png', // Replace with your logo path
-                    width: 40, // Adjust size as needed
-                    height: 40, // Adjust size as needed
+                    width: 40,
+                    height: 40,
                     color: Colors.white, // White color for the logo
                   ),
                 ),
               ),
               const SizedBox(height: 20),
-              // Welcome Text
               const Text(
                 'إنشاء حساب جديد',
                 style: TextStyle(
@@ -52,9 +103,8 @@ class RegisterScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
-
-              // Full Name Field
               TextFormField(
+                controller: fullNameController,
                 decoration: InputDecoration(
                   labelText: 'الاسم الكامل',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -74,9 +124,8 @@ class RegisterScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.white), // White text
               ),
               const SizedBox(height: 20),
-
-              // Email Field
               TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'البريد الإلكتروني',
                   labelStyle: const TextStyle(color: Colors.grey),
@@ -96,9 +145,8 @@ class RegisterScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.white), // White text
               ),
               const SizedBox(height: 20),
-
-              // Password Field
               TextFormField(
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'كلمة السر',
@@ -119,9 +167,8 @@ class RegisterScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.white), // White text
               ),
               const SizedBox(height: 20),
-
-              // Confirm Password Field
               TextFormField(
+                controller: confirmPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'تأكيد كلمة السر',
@@ -142,14 +189,10 @@ class RegisterScreen extends StatelessWidget {
                 style: const TextStyle(color: Colors.white), // White text
               ),
               const SizedBox(height: 30),
-
-              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
+                  onPressed: registerUser,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff8012DC), // Purple button
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -170,14 +213,12 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // Already Have an Account Link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                           context, RoutesName.kLoginScreenRoute);
                     },
                     child: const Text(

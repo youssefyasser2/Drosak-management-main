@@ -2,7 +2,9 @@ import 'package:drosak/src/controller/splash_screen/splash_screen_controller.dar
 import 'package:drosak/src/core/resources/assets_values_mananger.dart';
 import 'package:drosak/src/core/resources/colors_manager.dart';
 import 'package:drosak/src/core/resources/routes_mananger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -10,16 +12,29 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late SplashController _splashController;
 
   @override
   void initState() {
     super.initState();
-
     _splashController = SplashController();
     _splashController.initializeAnimation(this);
-    _splashController.startNavigationTimer(context, RoutesName.kOnBoardingScreenRoute);
+
+    // Check if the user is logged in or not
+    Future.delayed(Duration.zero, () async {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        // If the user is not logged in, navigate to the Onboarding screen
+        _splashController.startNavigationTimer(
+            context, RoutesName.kOnBoardingScreenRoute);
+      } else {
+        // If the user is logged in, navigate to the Main screen
+        _splashController.startNavigationTimer(
+            context, RoutesName.kMainScreenRoute);
+      }
+    });
   }
 
   @override
